@@ -1,0 +1,209 @@
+create table torre(ID serial primary key, bloco smallint not null, apartamento smallint not null);
+create table funcao(ID serial primary key, funcao varchar (30) not null);
+create table tipo_condomino(ID serial primary key, tipo varchar(30) not null);
+create table item(ID serial primary key, descritivo varchar(60) not null, lugar_encontrado varchar(150) not null, observacao varchar(150));
+
+
+create table funcionario(ID serial primary key, ID_funcao smallint not null, nome varchar (60) not null, sobrenome varchar (60) not null,
+                          rua varchar(100) not null, cep varchar(9) not null, bairro varchar(60)not null, cidade varchar(60)not null,
+                          telefone_fixo varchar(20), telefone_celular varchar(20), contato_emergencia varchar(100),
+                          constraint fk_funcionariofuncao foreign key (ID_funcao) references funcao(ID));
+                          
+
+create table condomino(ID serial primary key, ID_tipo_condomino smallint not null, ID_torre smallint not null, nome varchar (60) not null,
+                         sobrenome varchar (60) not null,email varchar(60), telefone_fixo varchar(20), telefone_celular varchar(20), 
+                         contato_emergencia varchar(100),
+                         constraint fk_condominotipo foreign key (ID_tipo_condomino) references tipo_condomino(ID),
+                         constraint fk_condominotorre foreign key (ID_torre) references torre(ID));
+                         
+create table reserva_salao(ID serial primary key, ID_condomino smallint not null, data date not null,
+                           constraint fk_reservacondomino foreign key (ID_condomino) references condomino(ID))
+                           
+create table ocorrencias (ID serial primary key, ocorrencia varchar (150) not null, ID_condomino smallint not null, data date not null,
+                          constraint fk_ocorrenciacondomino foreign key (ID_condomino) references condomino(ID))
+                          
+create table achados_e_perdidos (ID serial primary key, ID_item smallint not null,  ID_condomino_retirante smallint not null,
+                                 ID smallint not null, data_entrada date not null, data_retirada date,
+                                 constraint fk_achadoseperdidositem foreign key (ID_item) references item(ID),
+		
+                                 constraint fk_achadoseperdidoscondominoret foreign key (ID_condomino_retirante) references condomino(ID),
+                                 constraint fk_achadoseperdidosfuncionario foreign key (ID_funcionario) references funcionario(ID));
+
+
+insert into torre(bloco, apartamento) values (1,101);
+insert into torre(bloco, apartamento) values (1,102);
+insert into torre(bloco, apartamento) values (2,201);
+insert into torre(bloco, apartamento) values (2,202);
+insert into torre(bloco, apartamento) values (3,301);
+
+insert into funcao(funcao) values ('zelador');
+insert into funcao(funcao) values ('jardineiro');
+insert into funcao(funcao) values ('faxineiro');
+insert into funcao(funcao) values ('vigia');
+insert into funcao(funcao) values ('reparos');
+
+insert into tipo_condomino(tipo) values ('regular');
+insert into tipo_condomino(tipo) values ('sindico');
+insert into tipo_condomino(tipo) values ('sub-sindico');
+
+insert into item(descritivo, lugar_encontrado, observacao) values ('guarda-chuva laranja', 'garagem', 'possui etiqueta com telefone');
+insert into item(descritivo, lugar_encontrado) values ('calça jeans', 'corredor');
+insert into item(descritivo, lugar_encontrado, observacao) values ('carrinho de brinquedo', 'parquinho', 'hotweels');
+insert into item(descritivo, lugar_encontrado, observacao) values ('sapato', 'portaria', 'não possui par');
+insert into item(descritivo, lugar_encontrado, observacao) values ('calça de pijama', 'varal', 'estampa de urso');
+
+
+insert into funcionario(ID_funcao, nome, sobrenome, rua, cep, bairro, cidade, telefone_fixo, telefone_celular, contato_emergencia) values
+	(1,'Joe','Hogan','Rua do Teste', '88888-888', 'jardim do teste', 'Saint Jeseph', '3333-4444', '99999-8888', 'Mae 99955-777'),
+	(2,'Bill','Hicks','Teste Street', '66666-666', 'teste gardens', 'Florianopolis', '3333-5555', '99161-8888', 'Amigo 99955-747'),
+	(3,'George','Carlin','Travessa do Teste', '77777-777', 'coconut groove', 'Saint Jeseph', '3322-4477', '99999-1000', 'Esposa 99885-127'),
+	(4,'Bill','Burr','Teste de Maio', '99999-999', 'long beach', 'Saint Jeseph', '3222-4444', '99888-8888', 'Amigo 99145-887'),
+	(5,'Daniel','Sloss','Marechal Teste', '55555-555', 'trindad', 'Florianopolis', '3222-8854', '99887-8888', 'Lucy 99856-757');
+#constraint fk_funcionariofuncao foreign key (ID_funcao) references funcao(ID)
+                          
+
+insert into condomino(ID_tipo_condomino, id_torre, nome, sobrenome, email, telefone_fixo, telefone_celular, contato_emergencia) values
+	(2,5,'Splinter','Mestre','splinter@santatartaruga.com','3322-4455','9988-7766','April ONeal 9999-9999'),
+	(3,4,'leonardo','Azul','leo@santatartaruga.com','3322-5566','9988-8855','April ONeal 9999-9999'),
+	(1,3,'Donnatelo','Roxo','don@santatartaruga.com','3322-7788','9988-1122','April ONeal 9999-9999'),
+	(3,2,'Michellangelo','Laranja','mic@santatartaruga.com','9977-4455','1234-7766','April ONeal 9999-9999'),
+	(1,1,'Raphael','Vermelho','raf@santatartaruga.com','3322-6622','9988-9854','April ONeal 9999-9999');
+#constraint fk_condominotipo foreign key (ID_tipo_condomino) references tipo_condomino(iID)
+#constraint fk_condominotorre foreign key (ID_torre) references torre(ID));
+                         
+insert into reserva_salao(ID_condomino, data) values (1,'2020-10-01'),(2,'2020-10-11'),(3,'2020-10-02'),(4,'2020-10-12'),(5,'2020-12-31');
+#constraint fk_reservacondomino foreign key (ID_condomino) references condomino(ID))
+
+insert into ocorrencias (ocorrencia, ID_condomino, data) values ('Destruidor tentou invadir o predio', 1,'2020-09-22'),
+ ('Beebop tento comprar um apartamrnto', 2,'2020-10-01'), ('Michellangelo roubou minha pizza', 5,'2020-09-30'), 
+ ('Santa tartaruga!', 4,'2020-09-02'), ('Kawabanga', 3,'2020-09-28'); 
+#constraint fk_ocorrenciacondomino foreign key (ID_condomino) references condomino(id))
+                          
+
+insert into achados_e_perdidos (ID_item,  iID_condomino_retirante,ID_funcionario_registrante, data_entrada, data_retirada) values
+(1,4,1,'2020-09-10','2020-09-11'), (2,5,1,'2020-09-10','2020-09-12'), (3,4,1,'2020-09-13','2020-09-15'),
+(4,4,1,'2020-09-22','2020-09-22'),(5,2,1,'2020-09-10','2020-10-11');
+#constraint fk_achadoseperdidositem foreign key (ID_item) references item(id),
+#constraint fk_achadoseperdidoscondominoreg foreign key (ID_condomino_registrante) references condomino(ID),
+#constraint fk_achadoseperdidoscondominoret foreign key (ID_condomino_retirante) references condomino(ID),
+#constraint fk_achadoseperdidosfuncionario foreign key (ID_funcionario) references funcionario(ID))
+
+#verificar todas as reservas com condominos apts e bl
+select c.nome,r.data,t.bloco,t.apartamento from reserva_salao r
+inner join condomino c on r.id_condomino = c.ID
+inner join torre t on t.ID = c.ID_torre
+
+#verificar todas as ocorrencias com condominos apts e bl
+select o.data,o. ocorrencia, c.nome,t.bloco,t.apartamento from condomino c
+inner join ocorrencia o on o.ID_condomino = c.ID
+inner join torre t on t.ID = c.ID_torre
+
+
+#mostra os zeladores do predio
+select fu.nome, fu.sobrenome, fc.funcao from funcionario fu
+inner join funcao fc on fu.ID_funcao=fc.ID
+where fc.funcao = 'zelador'
+
+#mostra os sindicos e subsindicos
+select c.nome,c.sobrenome,t.bloco,t.apartamento, tc.tipo from condomino c
+inner join torre t on t.ID = c.ID_torre
+inner join tipo_condomino tc on tc.ID=c.ID_tipo_condomino
+where tc.tipo <> 'regular'
+order by tc.tipo;
+
+#mostra quem achou um item, quando achou, quem retirou, quando retirou o zelador e o item
+select  ac.data_entrada as quando_achou,
+        cr.nome as quem_retirou,ac.data_retirada as quando_retirou,
+        f.nome as quem_achou,fc.funcao, it.descritivo as item 
+        from achados_e_perdidos ac
+inner join item it on it.ID=ac.ID_item
+inner join condomino c on c.ID= ac.ID_condomino_registrante
+inner join condomino cr on cr.ID= ac.id_condomino_retirante
+inner join funcionario f on f.ID=ac.ID_funcionario
+inner join funcao fc on fc.ID = f.ID_funcao
+
+
+select nome, sobrenome from condomino where ID_tipo_condomino = 1
+
+#mostra a data de retirada e os itens que foram entregues dia 10 de setembro
+select it.descritivo, ac.data_retirada from achados_e_perdidos ac 
+inner join item it on it.ID = ac.ID_item
+where data_entrada  = '2020-09-10'
+
+select nome from condomino where contato_emergencia = 'April ONeal 9999-9999'
+
+#mostra o nome de que reservou o salao dia 12 de outubro
+select c.nome from reserva_salao rs 
+inner join condomino c on c.ID=rs.ID_condomino
+where data = '2020-10-12'
+
+select nome, sobrenome  from funcionario where cidade = 'Saint Jeseph'
+
+update achados_e_perdidos set data_retirada = '2020-10-10' where ID_item = 2;
+update achados_e_perdidos set data_entrada = '2020-10-10' where ID_condomino_registrante = 4;
+
+update condomino set email = 'mestre.splinter@santatartaruga.com' where email = 'splinter@santatartaruga.com';
+update condomino set contato_emergencia = 'Casey Jones 99988-55447' where nome = 'Michellangelo';
+
+update funcao set funcao = 'vigia_noturno' where funcao = 'vigia';
+update funcao set funcao = 'reparos_manutencao' where funcao = 'reparos';
+
+update funcionario set cidade = 'Sao Jose' where cidade = 'Saint Jeseph';
+update funcionario set cidade = 'Flonopix' where cidade = 'Florianopolis';
+
+update item set descritivo = 'lapis de cor' where ID = 2;
+update item set descritivo = 'sombrinha laranja' where ID = 1;
+
+update ocorrencias set ocorrencia = 'Beebop tentou estacionar um carro no portao' where data ='2020-10-01';
+update ocorrencias set ocorrencia = 'Pizza atrasou' where ID =3;
+
+update reserva_salao set data = '2021-01-01' where data ='2020-10-01';
+update reserva_salao set data = '2021-12-12' where ID_condomino = 2;
+
+update tipo_condomino set tipo = 'sindico_so_predio' where tipo ='sindico';
+update tipo_condomino set tipo = 'morador' where ID = 1;
+
+alter table torre add ocupado char
+update torre set ocupado = 's'
+
+
+delete from achados_e_perdidos where ID =1;
+delete from achados_e_perdidos where ID_item =5;
+delete from achados_e_perdidos where ID_item =3;
+delete from achados_e_perdidos where ID_condomino_retirante=5;
+delete from achados_e_perdidos where ID_condomino_retirante=4;
+
+delete from reserva_salao where ID_condomino = 1
+delete from reserva_salao where data = '2021-12-12'
+delete from reserva_salao where data = '2021-10-12'
+delete from reserva_salao where ID = 3
+delete from reserva_salao where ID = 5
+
+delete from ocorrencias where ID_condomino = 2
+delete from ocorrencias where data = '2020-09-02'
+delete from ocorrencias where ocorrencia = 'Kawabanga'
+
+delete from funcionario where nome = 'Bill'
+delete from funcionario where rua = 'Rua do Teste'
+delete from funcionario where ID_funcao = 3
+
+delete from funcao where funcao = 'zelador'
+delete from funcao where ID = 3
+delete from funcao where funcao = 'jardineiro'
+
+delete from condomino where ID=1;
+delete from condomino where ID_tipo_condomino =3;
+delete from condomino where sobrenome='Roxo';
+delete from condomino where ID_tipo_condomino =1;
+
+delete from item where lugar_encontrado = 'corredor'
+delete from item where descritivo = 'sapato'
+delete from item where ID = 1
+
+delete from tipo_condomino where tipo = 'sindico_so_predio'
+delete from tipo_condomino where  = 3
+delete from tipo_condomino where tipo = 'morador'
+
+delete from torre where apartamento = 102 and bloco = 1
+delete from torre where apartamento = 202 and bloco = 2
+delete from torre where bloco = 3
