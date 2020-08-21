@@ -44,7 +44,6 @@ public abstract class Connexion {
 
     public void insert(String table,String atributes, String object) {
         try {
-//            this.resultSet = statement.executeQuery("insert into \"Condominio\".public." + table + "("+ atributes + ") values " + object);
             this.resultSet = statement.executeQuery(" INSERT INTO \"" + connexionRoute.getNameOfDataBase() + "\"" + ".public." + table + "("+ atributes + ") values " + object);
 
             action();
